@@ -56,6 +56,11 @@ class WeatherService {
     }
   }
 
+  getWindDirection(deg) {
+    const directions = ['Utara', 'Timur Laut', 'Timur', 'Tenggara', 'Selatan', 'Barat Daya', 'Barat', 'Barat Laut'];
+    return directions[Math.round(deg / 45) % 8];
+  }
+
   // Format weather data for display
   formatWeatherData(data) {
     return {
@@ -63,14 +68,21 @@ class WeatherService {
       country: data.sys.country,
       temperature: Math.round(data.main.temp),
       feelsLike: Math.round(data.main.feels_like),
+      tempMin: Math.round(data.main.temp_min),
+      tempMax: Math.round(data.main.temp_max),
       humidity: data.main.humidity,
       pressure: data.main.pressure,
+      seaLevel: data.main.sea_level,
       description: data.weather[0].description,
       icon: data.weather[0].icon,
+      main: data.weather[0].main,
       windSpeed: data.wind.speed,
+      windDeg: data.wind.deg,
+      windDir: data.wind.deg ? this.getWindDirection(data.wind.deg) : '-',
+      clouds: data.clouds?.all,
       visibility: data.visibility,
-      sunrise: new Date(data.sys.sunrise * 1000).toLocaleTimeString('id-ID'),
-      sunset: new Date(data.sys.sunset * 1000).toLocaleTimeString('id-ID')
+      sunrise: new Date(data.sys.sunrise * 1000).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+      sunset: new Date(data.sys.sunset * 1000).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
     };
   }
 
